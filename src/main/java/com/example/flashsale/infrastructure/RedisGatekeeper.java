@@ -17,9 +17,9 @@ public class RedisGatekeeper {
     public boolean reserveStock(Long productId, Integer quantity) {
         //LUA scripting
         StringBuilder luaScript = new StringBuilder()
-            .append("local stock = tonumber(rediscall('GET', KEYS[2]);) ")
-            .append("if (stock and stock >= tonumber(ARGV[2])) then ")
-            .append("  redis.call('DECRBY', KEYS[2], ARGV[2]);")
+            .append("local stock = tonumber(redis.call('GET', KEYS[1])); ")
+            .append("if (stock and stock >= tonumber(ARGV[1])) then ")
+            .append("  redis.call('DECRBY', KEYS[1], ARGV[1]);")
             .append("  return 1;")
             .append("end; ")
             .append("return 0;");
@@ -28,7 +28,7 @@ public class RedisGatekeeper {
             luaScript.toString(),
             Long.class
         );
-        String key = new StringBuilder("product: ")
+        String key = new StringBuilder("product:")
             .append(productId)
             .append(":stock")
             .toString();
@@ -36,7 +36,7 @@ public class RedisGatekeeper {
         Long result = redisTemplate.execute(
             script,
             Collections.singletonList(key),
-            String.valueOf(quantity)
+            Integer.toString(quantity)
         );
 
         return result != null && result == 1L;

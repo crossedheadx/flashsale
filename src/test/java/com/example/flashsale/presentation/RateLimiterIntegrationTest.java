@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -22,10 +23,17 @@ public class RateLimiterIntegrationTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
     @BeforeEach
     void setUp() {
         productRepository.deleteAll(); // ONLY for testing
-        productRepository.save(new Product("Flash product", 100));
+        Product product= productRepository.save(new Product("Flash product", 100));
+        
+        redisTemplate.opsForValue().set("product:" + product.getId() + ":stock", "100");
+
+        redisTemplate.delete("rate_limit:test-malicious");
     }
 
     @Test
@@ -41,6 +49,7 @@ public class RateLimiterIntegrationTest {
                         .param("quantity", "1")
                         .header("X-Client-id", clientId)
                 )
+                .andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
         }
 

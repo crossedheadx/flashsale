@@ -16,10 +16,10 @@ public class RateLimiterService {
 
     public boolean isAllowed(String clientId) {
         String luascript = new StringBuilder(
-            "local current = redis.call('INCR', KEYS[2]) "
+            "local current = redis.call('INCR', KEYS[1]); "
         )
             .append("if tonumber(current) == 1 then ")
-            .append("  redis.call('EXPIRE', KEYS[2], 1); ") //1s expire
+            .append("  redis.call('EXPIRE', KEYS[1], 1); ") //1s expire
             .append("end; ")
             .append("if tonumber(current) > 5 then ")
             .append("  return 0; ") // Block

@@ -18,6 +18,13 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
     command: mvn spring-boot:run
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./src
+          target: /workspace/src
+        - action: rebuild
+          path: ./pom.xml
     depends_on:
       postgres:
         condition: service_healthy
