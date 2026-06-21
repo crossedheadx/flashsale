@@ -1,6 +1,7 @@
 package com.example.flashsale.application;
 
 import com.example.flashsale.domain.Product;
+import com.example.flashsale.infrastructure.OrderEventProducer;
 import com.example.flashsale.infrastructure.ProductRepository;
 import com.example.flashsale.infrastructure.RedisGatekeeper;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,16 @@ public class PurchaseUseCase {
 
     private final ProductRepository productRepository;
     private final RedisGatekeeper redisGatekeeper;
+    private final OrderEventProducer orderEventProducer;
 
     public PurchaseUseCase(
         ProductRepository productRepository,
-        RedisGatekeeper redisGatekeeper
+        RedisGatekeeper redisGatekeeper,
+        OrderEventProducer orderEventProducer
     ) {
         this.productRepository = productRepository;
         this.redisGatekeeper = redisGatekeeper;
+        this.orderEventProducer = orderEventProducer;
     }
 
     @Transactional
@@ -42,5 +46,7 @@ public class PurchaseUseCase {
         product.decreaseStock(quantity);
         // db save
         productRepository.save(product);
+// announce on queue
+        orderEventProducer.sendOrderEvent(productId);
     }
 }
