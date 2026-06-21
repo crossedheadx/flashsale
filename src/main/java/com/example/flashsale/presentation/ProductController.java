@@ -3,11 +3,8 @@ package com.example.flashsale.presentation;
 import com.example.flashsale.application.PurchaseUseCase;
 import com.example.flashsale.infrastructure.RateLimiterService;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
