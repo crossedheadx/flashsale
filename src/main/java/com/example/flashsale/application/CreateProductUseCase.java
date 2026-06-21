@@ -3,15 +3,15 @@ package com.example.flashsale.application;
 import org.springframework.stereotype.Service;
 
 import com.example.flashsale.domain.Product;
-import com.example.flashsale.infrastructure.ProductRepository;
+import com.example.flashsale.infrastructure.ProductRepositoryAdapter;
 
 import jakarta.transaction.Transactional;
 
 @Service
 public class CreateProductUseCase {
-    private final ProductRepository productRepository;
+    private final ProductRepositoryAdapter productRepository;
 
-    public CreateProductUseCase(ProductRepository productRepository){
+    public CreateProductUseCase(ProductRepositoryAdapter productRepository){
         this.productRepository = productRepository;
     }
 

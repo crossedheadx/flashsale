@@ -2,7 +2,7 @@ package com.example.flashsale.application;
 
 import com.example.flashsale.domain.Product;
 import com.example.flashsale.infrastructure.OrderEventProducer;
-import com.example.flashsale.infrastructure.ProductRepository;
+import com.example.flashsale.infrastructure.ProductRepositoryAdapter;
 import com.example.flashsale.infrastructure.RedisGatekeeper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PurchaseUseCase {
 
-    private final ProductRepository productRepository;
+    private final ProductRepositoryAdapter productRepository;
     private final RedisGatekeeper redisGatekeeper;
     private final OrderEventProducer orderEventProducer;
 
     public PurchaseUseCase(
-        ProductRepository productRepository,
+        ProductRepositoryAdapter productRepository,
         RedisGatekeeper redisGatekeeper,
         OrderEventProducer orderEventProducer
     ) {
