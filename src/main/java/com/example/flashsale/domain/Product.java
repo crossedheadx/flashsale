@@ -14,6 +14,8 @@ public class Product {
 
     private Integer stock;
 
+    private Double price;
+
     @Version //optimistic locking
     private Long version;
 
@@ -46,7 +48,15 @@ public class Product {
         return this.id;
     }
 
+    public Double getPrice(){
+        return this.price;
+    }
+
     // SETTER
+    public void setId(Long id){
+        this.id = id;
+    }
+
     public void setName(String newName) {
         this.name = newName;
     }
@@ -58,5 +68,12 @@ public class Product {
             );
         }
         this.stock = newStock;
+    }
+
+    public void setPrice(Double newPrice){
+        if(newPrice < 0){
+            throw new IllegalStateException("Price cannot be below 0, price received: " + Double.toString(newPrice));
+        }
+        this.price = newPrice;
     }
 }
